@@ -14,7 +14,7 @@ instructor: ["Hugo Tavares", "Krzysztof Poterlowicz"] # list of names like ["Kay
 helper: ["Rocio Martinez Nunez", "Alessandra Vigilante"]     # list of names like ["Marlyn Wescoff", "Fran Bilas", "Ruth Lichterman"]
 contact: "Gabriella Rustici <gr231@cam.ac.uk>"      # contact email address for workshop organizer, such as "grace@hopper.org"
 contact2: "Rocio Martinez-Nunez <rocio.martinez_nunez@kcl.ac.uk>"      # contact email address for workshop organizer, such as "grace@hopper.org"
-etherpad:         # optional (insert the URL for your Etherpad if you're using one)
+etherpad: http://pad.software-carpentry.org/2018-02-22-KCL        # optional (insert the URL for your Etherpad if you're using one)
 eventbrite:       # optional (insert the alphanumeric key for Eventbrite registration, e.g., "1234567890AB")
 day1_am: "Data organization and cleaning"
 day1_pm: "Introduction to R"
@@ -151,6 +151,29 @@ data and be able to apply the tools and approaches directly to their ongoing res
 <p><a href='{{ site.dc_pre_assessment }}'>Pre-workshop Survey</a></p>
 <p><a href='{{ site.dc_post_assessment }}'>Post-workshop Survey</a></p>
 
+
+<!--
+  ETHERPAD
+
+  Display the Etherpad for the workshop.  You can set this up in
+  advance or on the first day; either way, make sure you push changes
+  to GitHub after you have its URL.  To create an Etherpad, go to
+
+      http://etherpad.mozilla.org/YYYY-MM-DD-site
+
+  where 'YYYY-MM-DD-site' is the identifier for your workshop (e.g.,
+  '2015-06-10-esu'.
+-->
+{% if page.etherpad %}
+<p>
+  <strong>Etherpad:</strong> <a href="{{page.etherpad}}">{{page.etherpad}}</a>.
+  <br/>
+  We will use this Etherpad for chatting, taking notes, and sharing URLs and bits of code.
+</p>
+{% endif %}
+
+<hr/>
+
   
 <!--
   SCHEDULE
@@ -159,7 +182,7 @@ data and be able to apply the tools and approaches directly to their ongoing res
   to match your plans.  You may also want to change 'Day 1' and 'Day
   2' to be actual dates or days of the week.
 -->
-<h2>Preliminary Schedule</h2>
+<h2>Schedule</h2>
 
   <h3> Day 1 </h3>
   
@@ -195,8 +218,14 @@ data and be able to apply the tools and approaches directly to their ongoing res
 
   <ol>
     <li><a href="http://www.datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html">Data visualisation using the R package ggplot2</a></li>
-    <li><a href="https://rawgit.com/tavareshugo/2018-02-22-KCL/gh-pages/rnaseq_lesson/rnaseq_data_lesson.html">Advanced data manipulation with an example from genomics</a></li>
+    <li><a href="https://rawgit.com/tavareshugo/2018-02-22-KCL/gh-pages/rnaseq_lesson/rnaseq_data_lesson.html">Advanced data manipulation with an example from genomics</a>. 
+      Download the data file for this lesson 
+    <a href="https://github.com/tavareshugo/2018-02-22-KCL/blob/gh-pages/rnaseq_lesson/rnaseq_data.RData?raw=true">here</a>.</li>
   </ol>
+  
+  <p>
+    
+  </p>
   
   <h4>(optional) Interacting with databases</h4>
   
@@ -236,28 +265,6 @@ data and be able to apply the tools and approaches directly to their ongoing res
 </div>
 -->
   
-<!--
-  ETHERPAD
-
-  Display the Etherpad for the workshop.  You can set this up in
-  advance or on the first day; either way, make sure you push changes
-  to GitHub after you have its URL.  To create an Etherpad, go to
-
-      http://etherpad.mozilla.org/YYYY-MM-DD-site
-
-  where 'YYYY-MM-DD-site' is the identifier for your workshop (e.g.,
-  '2015-06-10-esu'.
--->
-{% if page.etherpad %}
-<p>
-  <strong>Etherpad:</strong> <a href="{{page.etherpad}}">{{page.etherpad}}</a>.
-  <br/>
-  We will use this Etherpad for chatting, taking notes, and sharing URLs and bits of code.
-</p>
-{% endif %}
-
-<hr/>
-
 <!--
   SYLLABUS
 
