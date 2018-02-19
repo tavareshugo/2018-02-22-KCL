@@ -6,23 +6,35 @@ output:
   html_document:
     toc: yes
     toc_float: yes
+    toc_depth: 3
+    highlight: pygments
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, rows.print = 10)
 ```
 
+# Lesson objectives
+
+* Introducing a `matrix` object and how to convert it to a `tibble`
+* Reformat data from wide to long format (and vice-versa)
+* Join tables
+* Using factors to improve data visualisation
+
 In this lesson, we will apply some of the skills that we've gained so far to manipulate 
 and explore a dataset from an RNAseq experiment. 
 
 This lesson uses data from an experiment included in the 
-[`airway` R package](https://bioconductor.org/packages/release/data/experiment/vignettes/airway/inst/doc/airway.html). 
+[`airway` R/Bioconductor package](https://bioconductor.org/packages/release/data/experiment/vignettes/airway/inst/doc/airway.html). 
 Very briefly:
 
 > This package provides [...] read counts in genes for an RNA-Seq experiment on 
 four human airway smooth muscle cell lines treated with dexamethasone.
 
-**Please note:**
+**Download the data for this lesson 
+[here](https://github.com/tavareshugo/2018-02-22-KCL/blob/gh-pages/rnaseq_lesson/rnaseq_data.RData?raw=true).**
+
+### Important note
 
 There are many dedicated packages to deal with RNAseq data, mostly 
 within the [Bioconductor](https://bioconductor.org/) package repository. 
@@ -34,15 +46,6 @@ so far can be applied to explore these kind of data.
 If you are doing RNAseq analysis, you should use 
 [dedicated packages and workflows](https://www.bioconductor.org/help/workflows/rnaseqGene/), 
 which implement models to account for particular features of these data.
-
-
-# Lesson objectives
-
-* Introducing a matrix object
-    * convert it to a `tibble`
-* Reformat data from wide to long format (and vice-versa)
-* Join tables
-* More data visualisation
 
 
 # Getting started
@@ -121,13 +124,27 @@ norm_cts %>%
 **Exercise:**
 
 > Familiarise yourself with these data:
->- what kind of objects were you provided with? (hint: `class()`)
->- How many samples did you have?
->- How many genes do you have gene expression levels for?
->- How many genes were differentially expressed at the 5% false-discovery rate?
->- After looking at these data and their formats, think about the steps you'd have
+>
+> - what kind of objects were you provided with? (hint: `class()`)
+> - How many samples did you have?
+> - How many genes do you have gene expression levels for?
+> - How many genes were differentially expressed at the 5% false-discovery rate?
+> - After looking at these data and their formats, think about the steps you'd have
 to take in order to produce the graphs above.
 
+
+# Preparing data for vizualisation
+
+To produce the plots above, we need to do a few things:
+
+1. Convert the matrix of normalised counts to a `tibble` object
+2. Convert that table to "long" format, i.e. with 3 columns: `gene`, `sample_id`,
+`cts`, rather than one column per sample
+3. Join this table with the `sample_info` table 
+4. Filter "significant" genes from `test_result` table and classify them as up- or 
+down-regulated. Join this table to the previous one.
+5. Summarise the normalised counts to obtain the average expression per treatment 
+and sample
 
 ### Matrix object
 
@@ -165,27 +182,14 @@ cts_tbl
 ```
 
 
-### Calculate the average gene expression per treatment
-
-To do this, we need a few steps:
-
-1. Convert table to "long" format, i.e. with 3 columns:
-    * `gene`
-    * `sample_id`
-    * `cts`
-2. Join this table with the `sample_info` table 
-3. Filter "significant" genes from `test_result` table and classify them as up- or 
-down-regulated. Join this table to the previous one.
-4. Use "split-apply-combine" approach to summarise data per treatment and sample
-
-#### Step 1: reshaping data to "long" format
+### Reshaping data to "long" format
 
 There's two functions that allow us to convert tables from a "wide" to a "long" 
-format and vice-versa: `gather()` and `spread()`
+format and vice-versa: `gather()` and `spread()`.
 
-[!spread](http://www.datacarpentry.org/R-ecology-lesson/img/spread_data_R.png)
+![](http://www.datacarpentry.org/R-ecology-lesson/img/spread_data_R.png)
 
-[!gather](http://www.datacarpentry.org/R-ecology-lesson/img/gather_data_R.png)
+![](http://www.datacarpentry.org/R-ecology-lesson/img/gather_data_R.png)
 
 If you notice, what we want in our case is to `gather` our gene expression 
 columns. We can do this by giving `gather()` four things:
@@ -212,8 +216,11 @@ cts_long %>%
   spread(sample_id, cts)
 ```
 
+(see [here](http://www.datacarpentry.org/R-ecology-lesson/03-dplyr.html#reshaping_with_gather_and_spread)
+for another example of using these functions)
 
-#### Step 2: join two tables together
+
+### Joining tables together
 
 The next thing we want to do is to add information about each sample to our 
 gene expression table.
@@ -247,7 +254,7 @@ tables had different names. Also, we can join tables by more than one
 column, which is not necessary here.
 
 
-#### Step 3: Filter and classify genes
+### Filter and classify genes
 
 Now we want to add information about the test results for each gene to our gene 
 expression table. 
@@ -292,10 +299,11 @@ cts_filtered
 ```
 
 
-#### Step 4: Calculate mean expression per gene
+### Calculate mean expression per gene
 
-Now, we can apply the "split-apply-combine" strategy that we've already learned 
-about, to summarise the data per gene.
+Now, we can apply the 
+["split-apply-combine"](http://www.datacarpentry.org/R-ecology-lesson/03-dplyr.html#split-apply-combine_data_analysis_and_the_summarize()_function) 
+strategy that we've already learned about, to summarise the data per gene.
 
 **Exercise:**
 
@@ -311,7 +319,10 @@ cts_per_gene <- cts_filtered %>%
 cts_per_gene
 ```
 
-With this table, we are now ready to produce our plot!
+
+# Making our plots
+
+With that final table, we are now ready to produce our plot!
 
 ```{r}
 ggplot(cts_per_gene, aes(dex, mean_cts)) +
@@ -341,7 +352,7 @@ cts_per_gene %>%
 ```
 
 
-#### Ordering factors based on other variables
+### Ordering factors based on other variables
 
 Let's look at how using factors can be very useful to improve our display of 
 information.
@@ -435,7 +446,7 @@ cts_filtered %>%
 And this is a much more structured graph!
 
 
-#### Transforming expression data for visualization
+### Transforming expression data for visualization
 
 There's one final thing that will improve our "heatmap" representation of the 
 data. We could transform our data to ensure that the different genes are 
@@ -473,11 +484,11 @@ cts_filtered %>%
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.title.y = element_blank()) +
-  scale_fill_gradient2(low = "royalblue", mid = "grey", high = "red3") +
+  scale_fill_gradient2(low = "blue3", mid = "grey", high = "red3") +
   labs(x = "Sample", fill = "Z-score")
 ```
 
-And that's it!! Notice that because of the symmetry of z-scores, they are 
+And that's it! Notice that because of the symmetry of z-scores, they are 
 very suited to a "divergent colour scale", which we've set with the function 
 `scale_fill_gradient2` to emphasize positive and negative values in a more 
 intuitive way.
