@@ -31,8 +31,6 @@ Very briefly:
 > This package provides [...] read counts in genes for an RNA-Seq experiment on 
 four human airway smooth muscle cell lines treated with dexamethasone.
 
-**Download the data for this lesson 
-[here](https://github.com/tavareshugo/2018-02-22-KCL/blob/gh-pages/rnaseq_lesson/rnaseq_data.RData?raw=true).**
 
 ### Important note
 
@@ -59,19 +57,38 @@ analysed it and provided you with three things:
 your data assuming no difference between treated and untreated cells.
 
 The data are provided within an `RData` file, which you can download and read 
-into your R session:
+into your R session.
 
-```{r, message = FALSE}
-# Clean your workspace by removing any objects created before
+First, let's clean our workspace (remove any objects created before), 
+and also load the `tidyverse` package. 
+
+It's also a good idea to check if your _working directory_ is correctly set to 
+your workshop folder, which should contain a `data` folder within it (you can 
+use `getwd()` to check your _working directory_).
+
+```{r, eval = FALSE}
+# Clean your workspace by removing any objects created beforehand
 rm(list = ls())
 
 # Load the tidyverse package
 library(tidyverse)
 
-# Load the RNAseq data provided by your collaborator
-load("rnaseq_data.RData")
+# Download the data provided by your collaborator
+download.file("https://github.com/tavareshugo/2018-02-22-KCL/blob/gh-pages/rnaseq_lesson/rnaseq_data.RData?raw=true",
+              destfile = "data/rnaseq_data.RData")
+
+# Load the data
+load("data/rnaseq_data.RData")
 ```
 
+```{r, echo = FALSE, message = FALSE}
+# In the repository data is read from the current directory
+# Load the tidyverse package
+library(tidyverse)
+
+# Load the data
+load("rnaseq_data.RData")
+```
 
 Now that you have these data, you want to produce the following two visualisations:
 
@@ -133,7 +150,7 @@ norm_cts %>%
 to take in order to produce the graphs above.
 
 
-# Preparing data for vizualisation
+# Preparing data for visualisation
 
 To produce the plots above, we need to do a few things:
 
